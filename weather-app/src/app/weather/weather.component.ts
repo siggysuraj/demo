@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ApixuService } from "../apixu.service";
 
 @Component({
   selector: 'app-weather',
@@ -8,14 +9,24 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class WeatherComponent {
 
-  public weatherSearchForm: FormGroup | undefined;
-  constructor(private formBuilder: FormBuilder) {}
+  public weatherSearchForm!: FormGroup;
+  public weatherData: any;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private apixuService: ApixuService
+  ) {}
 
   ngOnInit() {
     this.weatherSearchForm = this.formBuilder.group({
-      location: ['']
+      location: [""]
     });
   }
 
-  
+  sendToAPIXU(formValues:any) {
+    this.apixuService.getWeather(formValues.location).subscribe(data => {
+      this.weatherData = data;
+      console.log(this.weatherData);
+    });
+  }
 }
